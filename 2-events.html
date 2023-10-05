@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>DSCI 554 Lab events</title>
+
+  <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css">
+
+  <link href="node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+  <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+  <link rel="stylesheet" href="./github-dark-dimmed.min.css">
+  <script src="./highlight.min.js"></script>
+
+  <script src="./node_modules/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+  <link rel="stylesheet" href="./node_modules/highlightjs-copy/dist/highlightjs-copy.min.css" />
+
+  <script>
+    hljs.highlightAll();
+    hljs.addPlugin(new CopyButtonPlugin());
+  </script>
+
+  <script src="./node_modules/d3/dist/d3.min.js"></script>
+</head>
+
+<body>
+  <h1>🧪 Handling button events</h1>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="index.html">Labs index</a></li>
+      <li class="breadcrumb-item active" aria-current="page">🧪 Handling button events</li>
+    </ol>
+  </nav>
+
+  <h2>Arrow functions and 'this'</h2>
+
+  <p>Arrow functions in JavaScript do not bind their own <code>this</code> context. Unlike regular
+    functions, arrow functions do not have their own <code>this</code>, they inherit <code>this</code> from the
+    enclosing scope. This behavior is often referred to as "lexical scoping" or "lexical this".</p>
+
+  <pre><code class="js">const obj = {
+  i: 10,
+  b: () => console.log(this.i, this),
+  c() {
+    console.log(this.i, this);
+  },
+};
+
+obj.b(); // logs undefined, Window { /* … */ } (or the global object)
+obj.c(); // logs 10, Object { /* … */ }</code></pre>
+
+  <script>
+      const obj = {
+  i: 10,
+  b: () => console.log(this.i, this),
+  c() {
+    console.log(this.i, this);
+  },
+};
+
+obj.b(); // logs undefined, Window { /* … */ } (or the global object)
+obj.c(); // logs 10, Object { /* … */ }
+  </script>
+
+  <p>See the output in the console. In the RegularFunction, <code>this</code> inside the setTimeout function does not
+    refer to the <code>this</code>
+    of RegularFunction because regular functions have their own <code>this</code> context. In the ArrowFunction,
+    <code>this</code> inside the
+    setTimeout function refers to the <code>this</code> of the ArrowFunction because arrow functions do not have their own
+    <code>this</code> context
+    and inherit it from the parent scope (in this case, the ArrowFunction).
+  </p>
+
+  <h2>Button with vanilla JavaScript and onclick event</h3>
+
+    <div class="alert alert-danger">
+      <div class="fw-bold">🚨 Using <code>this</code> in event handlers</div>
+      To reference the DOM element in an event handler (with d3) use a function expression declaration, i.e., <code>function() {...}</code>.</div>
+    </div>  
+
+    <pre><code class="HTML">&lt;div class="mb-3"&gt;
+  &lt;button onclick="onClick(this, event)" class="btn btn-primary"&gt;Click to trigger onclick event!&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+//vanilla JS event handler
+function onClick(button, event) {
+  console.log('event', event); //event object
+  console.log('event.target', event.target);  //event target: the button
+  console.log('this', this);  //this is the Window
+
+  //set the button text
+  button.textContent = 'click event from onclicke!';
+}
+&lt;/script&gt;</code></pre>
+
+<div class="mb-3">
+  <button onclick="onClick(this, event)" class="btn btn-primary">Click to trigger onclick event!</button>
+</div>
+
+<script>
+//vanilla JS event handler
+function onClick(button, event) {
+  console.log('event', event); //event object
+  console.log('event.target', event.target);  //event target: the button
+  console.log('this', this);  //this is the window
+
+  //set the button text
+  button.textContent = 'click event from onclick!';
+}
+</script>
+
+<h2>Button with vanilla JavaScript and addEventListener</h3>
+  
+<pre><code class="HTML">&lt;div class="mb-3"&gt;
+  &lt;button id="btn-js" class="btn btn-success"&gt;Click to trigger onclick event!&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+var btn = document.getElementById('btn-js');
+btn.addEventListener('click', function (event) {
+  console.log('event', event); //event object
+  console.log('event.target', event.target);  //event target: the button
+  console.log('this', this);  //this is the current DOM element
+  this.textContent = 'click event from addEventListener!';
+});
+&lt;/script&gt;</code></pre>
+
+<div class="mb-3">
+  <button id="btn-js" class="btn btn-success">Click to trigger onclick event!</button>
+</div>
+
+<script>
+var btn = document.getElementById('btn-js');
+btn.addEventListener('click', function (event) {
+  console.log('event', event); //event object
+  console.log('event.target', event.target);  //event target: the button
+  console.log('this', this);  //this is the current DOM element
+  this.textContent = 'click event from addEventListener!';
+});
+</script></script>
+
+<h2>Button with D3</h3>
+
+<pre><code class="HTML">&lt;div class="mb-3"&gt;
+  &lt;button id="btn-d3" class="btn btn-info"&gt;Click to trigger event with D3!&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+//see https://github.com/d3/d3-selection/blob/v3.0.0/README.md#selection_on
+d3.select('#btn-d3')
+  .on('click', function (event) {
+    console.log(event); //event object
+    console.log('event.target', event.target);  //event target: the button
+    console.log(this);  //this is the current DOM element
+
+    //ways to set the button text
+    //event.target.textContent = 'click event'; //with the event.target 
+    //d3.select('#btn-d3').text('click event');  //with d3 select
+    d3.select(this).text("click event with selection.on('click', ...)");  //with d3 select this (preferred)
+  });
+&lt;/script&gt;</code></pre>
+
+<div class="mb-3">
+  <button id="btn-d3" class="btn btn-info">Click to trigger event with D3!</button>
+</div>
+
+<script>
+//see https://github.com/d3/d3-selection/blob/v3.0.0/README.md#selection_on
+d3.select('#btn-d3')
+  .on('click', function (event) {
+    console.log(event); //event object
+    console.log('event.target', event.target);  //event target: the button
+    console.log(this);  //this is the current DOM element
+
+    //ways to set the button text
+    //event.target.textContent = 'click event'; //with the event.target 
+    //d3.select('#btn-d3').text('click event');  //with d3 select
+    d3.select(this).text("click event with selection.on('click', ...)");  //with d3 select this (preferred)
+  });
+</script>
+
+    <div class="mt-3 text-end"><a href="#"><i class="bi bi-arrow-up"></i> top</a></div>
+
+</body>
+
+</html>

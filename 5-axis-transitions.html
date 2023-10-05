@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>DSCI 554 Lab</title>
+
+  <link href="./node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css">
+
+  <link href="node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="./github-dark-dimmed.min.css">
+  <script src="./highlight.min.js"></script>
+
+  <script src="./node_modules/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+  <link rel="stylesheet" href="./node_modules/highlightjs-copy/dist/highlightjs-copy.min.css" />
+
+  <script src="./node_modules/d3/dist/d3.min.js"></script>
+
+  <script>
+    hljs.highlightAll();
+    hljs.addPlugin(new CopyButtonPlugin());
+  </script>
+</head>
+
+<body>
+  <h1>🧪 Axis transitions</h1>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="index.html">Labs index</a></li>
+      <li class="breadcrumb-item active" aria-current="page">🧪 Axis transitions</li>
+    </ol>
+  </nav>
+
+  <h2>Axis domain transition</h2>
+
+  <pre><code class="HTML" data-trim data-noescape>&lt;style&gt;
+  .axis0 line,
+  .axis0 path {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+
+  .tick line {
+    stroke: black;
+  }
+
+  .tick {
+    stroke: black;
+  }
+
+  text {
+    stroke: none;
+    fill: black;
+  }
+&lt;/style&gt;
+&lt;svg id="svg0" width="960" height="50" style="background-color: mistyrose"&gt;&lt;/svg&gt;
+&lt;script&gt;
+  var data = [0, 20, 100, 500, 700, 1000]
+
+  var x0 = d3.scaleLinear()
+    .domain(d3.extent(data))
+    .range([0, 900]);
+
+  var axis0 = d3.axisBottom()
+    .scale(x0);
+
+  var svg = d3.select("#svg0");
+
+  svg.append("g")
+    .attr("class", "axis0")
+    .attr("transform", "translate(30,20)")
+    .call(axis0);
+
+  var flag = false;
+  svg.on("click", () => {
+    x0.domain([0, flag ? 1000 : 500]);
+    flag = !flag;
+
+    d3.select(".axis0")
+      .transition()
+      .duration(1000)
+      .call(axis0);
+  });
+&lt;/script&gt;</code></pre>
+
+  <style>
+    .axis0 line,
+    .axis0 path {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+    .tick line {
+      stroke: black;
+    }
+
+    .tick {
+      stroke: black;
+    }
+
+    text {
+      stroke: none;
+      fill: black;
+    }
+  </style>
+  <svg id="svg0" width="960" height="50" style="background-color: mistyrose"></svg>
+  <script>
+    var data = [0, 20, 100, 500, 700, 1000]
+
+    var x0 = d3.scaleLinear()
+      .domain(d3.extent(data))
+      .range([0, 900]);
+
+    var axis0 = d3.axisBottom()
+      .scale(x0);
+
+    var svg = d3.select("#svg0");
+
+    svg.append("g")
+      .attr("class", "axis0")
+      .attr("transform", "translate(30,20)")
+      .call(axis0);
+
+    var flag = false;
+    svg.on("click", () => {
+      x0.domain([0, flag ? 1000 : 500]);
+      flag = !flag;
+
+      d3.select(".axis0")
+        .transition()
+        .duration(1000)
+        .call(axis0);
+    });
+  </script>
+
+  <h2>2. Axis type transition</h2>
+
+  <pre><code class="HTML" data-trim data-noescape>&lt;svg id="svg1" width="960" height="50" style="background-color: mistyrose"&gt;&lt;/svg&gt;
+&lt;script&gt;
+  var data = [10, 2200, 100000, 50000000, 70000000, 100000000]
+
+  var x1 = d3.scaleLinear()  //set domain and range
+    .domain(d3.extent(data))
+    .range([0, 900]);
+
+  var x2 = d3.scaleLog()  //set domain and range
+    .domain(d3.extent(data))
+    .range([0, 900]);
+
+  var axis = d3.axisBottom()
+    .scale(x1);
+
+  var svg = d3.select("#svg1");
+
+  svg.append("g")
+    .attr("class", "axis1")
+    .attr("transform", "translate(30,20)")
+    .call(axis);
+
+  var flag = false;
+  svg.on("click", function () {
+    d3.select(".axis1")
+      .transition()
+      .duration(1000)
+      .call(flag ? axis.scale(x1) : axis.scale(x2));  //changescale according to flag value
+    flag = !flag;
+  });
+&lt;/script&gt;</code></pre>
+
+<svg id="svg1" width="960" height="50" style="background-color: mistyrose"></svg>
+<script>
+  var data = [10, 2200, 100000, 50000000, 70000000, 100000000]
+
+  var x1 = d3.scaleLinear()  //set domain and range
+    .domain(d3.extent(data))
+    .range([0, 900]);
+
+  var x2 = d3.scaleLog()  //set domain and range
+    .domain(d3.extent(data))
+    .range([0, 900]);
+
+  var axis = d3.axisBottom()
+    .scale(x1);
+
+  var svg = d3.select("#svg1");
+
+  svg.append("g")
+    .attr("class", "axis1")
+    .attr("transform", "translate(30,20)")
+    .call(axis);
+
+  var flag = false;
+  svg.on("click", function () {
+    d3.select(".axis1")
+      .transition()
+      .duration(1000)
+      .call(flag ? axis.scale(x1) : axis.scale(x2));  //changescale according to flag value
+    flag = !flag;
+  });
+</script>
+
+  <div class="mt-3 text-end"><a href="#"><i class="bi bi-arrow-up"></i> top</a></div>
+
+</body>
+
+</html>
